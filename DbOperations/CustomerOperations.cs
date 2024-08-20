@@ -3,11 +3,26 @@ using System.Transactions;
 using System.Data.SqlClient;
 using Project_0.Models;
 using Microsoft.VisualBasic;
+using System.Text.RegularExpressions;
 
 public class CustomerOperations
 {
 
     P0KennyBankingDbContext db = new P0KennyBankingDbContext();
+
+
+    public void DisplayCustomerMenu()
+    {
+        Console.WriteLine("1. Check Account Details");
+        Console.WriteLine("2. Withdraw");
+        Console.WriteLine("3. Deposit");
+        Console.WriteLine("4. Transfer");
+        Console.WriteLine("5. Last 5 transactions");
+        Console.WriteLine("6. Request Cheque Book");
+        Console.WriteLine("7. Change Password");
+        Console.WriteLine("8. Exit");
+    }
+
 
     public bool CheckCustomerLogin(string username, string password)
     {
@@ -25,18 +40,6 @@ public class CustomerOperations
         }
     }
 
-
-    public void DisplayCustomerMenu()
-    {
-        Console.WriteLine("1. Check Account Details");
-        Console.WriteLine("2. Withdraw");
-        Console.WriteLine("3. Deposit");
-        Console.WriteLine("4. Transfer");
-        Console.WriteLine("5. Last 5 transactions");
-        Console.WriteLine("6. Request Cheque Book");
-        Console.WriteLine("7. Change Password");
-        Console.WriteLine("8. Exit");
-    }
 
     public int GetID(string username, string password)
     {
@@ -206,9 +209,9 @@ public class CustomerOperations
     {
         Console.WriteLine("Last 5 transactions: ");
         var transactionList = db.CustomerTransactions.Where(a => a.AccNo == id)        //gets the last 5 transactions ordered so that the most recent transaction is first
-                                                          .OrderByDescending(a => a.TrNo)
-                                                          .Take(5)
-                                                          .ToList();
+                                                     .OrderByDescending(a => a.TrNo)
+                                                     .Take(5)
+                                                     .ToList();
         foreach (var transaction in transactionList)
         {
             if(transaction.TrType == "Transfer In")
@@ -230,6 +233,39 @@ public class CustomerOperations
         }
     }
 
+
+    public void ChequebookRequest(int id)
+    {
+        CustomerUser customer = db.CustomerUsers.Find(id);
+        RequestToAdmin rq1 = new RequestToAdmin();
+        rq1.AccNo = id;
+        rq1.RqType = "Checkbook";
+        db.RequestToAdmins.Add(rq1);
+        db.SaveChanges();
+        Console.WriteLine("Checkbook Requested");
+    }
+
+
+    public void PasswordChangeRequest(int id)
+    {
+        string password = "";
+        Console.WriteLine("Enter the new password you want. Passwords must be at least 6 characters long and the only special characters allowed are !@#$%^&*");
+        password = Regex.Replace(Console.ReadLine(), @"[^a-zA-Z0-9!@#$%^&*]", "");
+        while(password.Length <= 5)
+        {
+            Console.WriteLine("Password must be at least 6 characters long");
+            password = Regex.Replace(Console.ReadLine(), @"[^a-zA-Z0-9!@#$%^&*]", "");
+        }
+
+        CustomerUser customer = db.CustomerUsers.Find(id);
+        RequestToAdmin rq1 = new RequestToAdmin();
+        rq1.AccNo = id;
+        rq1.RqType = "Password Change";
+        rq1.RqPassword = password;
+        db.RequestToAdmins.Add(rq1);
+        db.SaveChanges();
+        Console.WriteLine("Password Request Sent");
+    }
 
 }
 

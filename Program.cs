@@ -78,14 +78,14 @@ try
                             break;
 
                             case 6:
-                                Console.WriteLine("Cheque book requested");
+                                customer.ChequebookRequest(customerID);
                                 Console.WriteLine("Press enter to continue");
                                 Console.ReadLine();
                                 Console.Clear();
                             break;
                             
                             case 7:
-                                Console.WriteLine("Password change successful");
+                                customer.PasswordChangeRequest(customerID);
                                 Console.WriteLine("Press enter to continue");
                                 Console.ReadLine();
                                 Console.Clear();
@@ -123,8 +123,9 @@ try
                 inputPassword = Console.ReadLine();
                 if(admin.CheckAdminLogin(inputUsername,inputPassword) == true)
                 {
-                    Console.Clear();
+                    int adminID = admin.GetID(inputUsername,inputPassword);
                     int choiceAdmin = 0;
+                    Console.Clear();
                     while(choiceAdmin != 7)
                     {
                         admin.DisplayAdminMenu();
@@ -132,14 +133,14 @@ try
                         switch(choiceAdmin)
                         {
                             case 1:
-                                Console.WriteLine("New account created");
+                                admin.CreateNewAccount();
                                 Console.WriteLine("Press enter to continue");
                                 Console.ReadLine();
                                 Console.Clear();
                             break;
 
                             case 2:
-                                Console.WriteLine("Account deleted");
+                                admin.DeleteAccount(inputUsername);
                                 Console.WriteLine("Press enter to continue");
                                 Console.ReadLine();
                                 Console.Clear();

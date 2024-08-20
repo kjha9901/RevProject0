@@ -5,7 +5,9 @@ namespace Project_0.Models;
 
 public partial class AdminUser
 {
-    public string Username { get; set; } = null!;
+    public int AdminAccNo { get; set; }
+
+    public string? Username { get; set; }
 
     public string? Password { get; set; }
 }

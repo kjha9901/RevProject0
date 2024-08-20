@@ -20,4 +20,6 @@ public partial class CustomerUser
     public string? AccPassword { get; set; }
 
     public virtual ICollection<CustomerTransaction> CustomerTransactions { get; set; } = new List<CustomerTransaction>();
+
+    public virtual ICollection<RequestToAdmin> RequestToAdmins { get; set; } = new List<RequestToAdmin>();
 }

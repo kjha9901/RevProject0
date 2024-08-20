@@ -21,6 +21,8 @@ public partial class P0KennyBankingDbContext : DbContext
 
     public virtual DbSet<CustomerUser> CustomerUsers { get; set; }
 
+    public virtual DbSet<RequestToAdmin> RequestToAdmins { get; set; }
+
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see https://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Server=GENTLEMANNPC\\KENNYSERVER;Database=P0_Kenny_bankingDB;integrated security=true;TrustServerCertificate=true");
@@ -29,18 +31,21 @@ public partial class P0KennyBankingDbContext : DbContext
     {
         modelBuilder.Entity<AdminUser>(entity =>
         {
-            entity.HasKey(e => e.Username).HasName("pk_username_admin");
+            entity.HasKey(e => e.AdminAccNo).HasName("PK__AdminUse__B58B32E5367A2568");
 
             entity.ToTable("AdminUser");
 
-            entity.Property(e => e.Username)
-                .HasMaxLength(30)
-                .IsUnicode(false)
-                .HasColumnName("username");
+            entity.HasIndex(e => e.Username, "UQ__AdminUse__F3DBC5729A8059D1").IsUnique();
+
+            entity.Property(e => e.AdminAccNo).HasColumnName("adminAccNo");
             entity.Property(e => e.Password)
                 .HasMaxLength(30)
                 .IsUnicode(false)
                 .HasColumnName("password");
+            entity.Property(e => e.Username)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("username");
         });
 
         modelBuilder.Entity<CustomerTransaction>(entity =>
@@ -69,9 +74,9 @@ public partial class P0KennyBankingDbContext : DbContext
 
             entity.ToTable("CustomerUser");
 
-            entity.Property(e => e.AccNo)
-                .ValueGeneratedNever()
-                .HasColumnName("accNo");
+            entity.HasIndex(e => e.AccUsername, "UQ__Customer__30DCFEAE40C53889").IsUnique();
+
+            entity.Property(e => e.AccNo).HasColumnName("accNo");
             entity.Property(e => e.AccBalance)
                 .HasColumnType("decimal(18, 2)")
                 .HasColumnName("accBalance");
@@ -92,6 +97,31 @@ public partial class P0KennyBankingDbContext : DbContext
                 .HasMaxLength(30)
                 .IsUnicode(false)
                 .HasColumnName("accUsername");
+        });
+
+        modelBuilder.Entity<RequestToAdmin>(entity =>
+        {
+            entity.HasKey(e => e.RqNo).HasName("pk_rqNo");
+
+            entity.ToTable("RequestToAdmin");
+
+            entity.Property(e => e.RqNo).HasColumnName("rqNo");
+            entity.Property(e => e.AccNo).HasColumnName("accNo");
+            entity.Property(e => e.RqComplete)
+                .HasDefaultValue(false)
+                .HasColumnName("rqComplete");
+            entity.Property(e => e.RqPassword)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("rqPassword");
+            entity.Property(e => e.RqType)
+                .HasMaxLength(30)
+                .IsUnicode(false)
+                .HasColumnName("rqType");
+
+            entity.HasOne(d => d.AccNoNavigation).WithMany(p => p.RequestToAdmins)
+                .HasForeignKey(d => d.AccNo)
+                .HasConstraintName("fk_rqAccNo");
         });
 
         OnModelCreatingPartial(modelBuilder);
