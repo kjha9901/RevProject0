@@ -2,7 +2,7 @@
 
 using System.Data.SqlClient;
 
-int choice = 0;
+string choice = "0";
 string inputUsername = "";
 string inputPassword = "";
 
@@ -14,18 +14,18 @@ CustomerOperations customer = new CustomerOperations();
 
 try
 {
-    while(choice != 3)
+    while(choice != "3")
     {
+        Console.Clear();
         Console.WriteLine("Welcome to THE BANK");
         Console.WriteLine("1. Customer");
         Console.WriteLine("2. Admin");
         Console.WriteLine("3. Exit");
-        choice = Convert.ToInt32(Console.ReadLine());
+        choice = Console.ReadLine();
         Console.Clear();
         switch(choice)
         {
-            case 1:
-                
+            case "1":
                 Console.WriteLine("Please enter username: ");
                 inputUsername = Console.ReadLine();
                 Console.WriteLine("Please enter password: ");
@@ -33,65 +33,65 @@ try
                 if(customer.CheckCustomerLogin(inputUsername,inputPassword) == true)
                 {
                     int customerID = customer.GetID(inputUsername,inputPassword);
-                    int choiceCustomer = 0;
+                    string choiceCustomer = "0";
                     Console.Clear();
                     
-                    while(choiceCustomer != 8)
+                    while(choiceCustomer != "8")
                     {
                         customer.DisplayCustomerMenu();
-                        choiceCustomer = Convert.ToInt32(Console.ReadLine());
+                        choiceCustomer = Console.ReadLine();
                         switch(choiceCustomer)
                         {
-                            case 1:
+                            case "1":
                                 customer.AccountDetails(customerID);
                                 Console.WriteLine("Press enter to continue");
                                 Console.ReadLine();
                                 Console.Clear();
                             break;
 
-                            case 2:
+                            case "2":
                                 customer.Withdraw(customerID);
                                 Console.WriteLine("Press enter to continue");
                                 Console.ReadLine();
                                 Console.Clear();
                             break;
                             
-                            case 3:
+                            case "3":
                                 customer.Deposit(customerID);
                                 Console.WriteLine("Press enter to continue");
                                 Console.ReadLine();
                                 Console.Clear();
                             break;
 
-                            case 4:
+                            case "4":
                                 customer.Transfer(customerID);
                                 Console.WriteLine("Press enter to continue");
                                 Console.ReadLine();
                                 Console.Clear();
                             break;
 
-                            case 5:
+                            case "5":
                                 customer.LastFiveTransactions(customerID);
                                 Console.WriteLine("Press enter to continue");
                                 Console.ReadLine();
                                 Console.Clear();
                             break;
 
-                            case 6:
+                            case "6":
                                 customer.ChequebookRequest(customerID);
                                 Console.WriteLine("Press enter to continue");
                                 Console.ReadLine();
                                 Console.Clear();
                             break;
                             
-                            case 7:
+                            case "7":
                                 customer.PasswordChangeRequest(customerID);
                                 Console.WriteLine("Press enter to continue");
                                 Console.ReadLine();
                                 Console.Clear();
                             break;
 
-                            case 8:
+                            case "8":
                                 Console.WriteLine("Exiting...");
                                 Console.WriteLine("Press enter to continue");
                                 Console.ReadLine();
@@ -116,7 +116,7 @@ try
                 }
             break;
 
-            case 2:
+            case "2":
                 Console.WriteLine("Please enter username: ");
                 inputUsername = Console.ReadLine();
                 Console.WriteLine("Please enter password: ");
@@ -124,57 +124,57 @@ try
                 if(admin.CheckAdminLogin(inputUsername,inputPassword) == true)
                 {
                     int adminID = admin.GetID(inputUsername,inputPassword);
-                    int choiceAdmin = 0;
+                    string choiceAdmin = "0";
                     Console.Clear();
-                    while(choiceAdmin != 7)
+                    while(choiceAdmin != "7")
                     {
                         admin.DisplayAdminMenu();
-                        choiceAdmin = Convert.ToInt32(Console.ReadLine());
+                        choiceAdmin = Console.ReadLine();
                         switch(choiceAdmin)
                         {
-                            case 1:
+                            case "1":
                                 admin.CreateNewAccount();
                                 Console.WriteLine("Press enter to continue");
                                 Console.ReadLine();
                                 Console.Clear();
                             break;
 
-                            case 2:
+                            case "2":
                                 admin.DeleteAccount(inputUsername);
                                 Console.WriteLine("Press enter to continue");
                                 Console.ReadLine();
                                 Console.Clear();
                             break;
                             
-                            case 3:
-                                Console.WriteLine("Account details edited");
+                            case "3":
+                                admin.EditAccountDetails();
                                 Console.WriteLine("Press enter to continue");
                                 Console.ReadLine();
                                 Console.Clear();
                             break;
 
-                            case 4:
-                                Console.WriteLine("Summary displayed");
+                            case "4":
+                                admin.DisplaySummary();
                                 Console.WriteLine("Press enter to continue");
                                 Console.ReadLine();
                                 Console.Clear();
                             break;
 
-                            case 5:
-                                Console.WriteLine("Customer password reset");
+                            case "5":
+                                admin.ResetCustomerPassword();
                                 Console.WriteLine("Press enter to continue");
                                 Console.ReadLine();
                                 Console.Clear();
                             break;
 
-                            case 6:
-                                Console.WriteLine("Cheque book request approved");
+                            case "6":
+                                admin.ApproveCheckbookRequest();
                                 Console.WriteLine("Press enter to continue");
                                 Console.ReadLine();
                                 Console.Clear();
                             break;
                             
-                            case 7:
+                            case "7":
                                 Console.WriteLine("Exiting...");
                                 Console.WriteLine("Press enter to continue");
                                 Console.ReadLine();
@@ -199,13 +199,15 @@ try
                 }
             break;
 
-            case 3:
+            case "3":
             Console.Clear();
             Console.WriteLine("Exited Bank");
             break;
 
             default:
                 Console.WriteLine("Invalid Choice, try again.");
+                Console.WriteLine("Press enter to continue");
+                Console.ReadLine();
             break;
         }
     }

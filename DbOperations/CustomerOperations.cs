@@ -238,11 +238,23 @@ public class CustomerOperations
     {
         CustomerUser customer = db.CustomerUsers.Find(id);
         RequestToAdmin rq1 = new RequestToAdmin();
-        rq1.AccNo = id;
-        rq1.RqType = "Checkbook";
-        db.RequestToAdmins.Add(rq1);
-        db.SaveChanges();
-        Console.WriteLine("Checkbook Requested");
+        var requestCheck = db.RequestToAdmins.Where(a => a.RqComplete == Convert.ToBoolean("False") && a.RqType == "Checkbook" && a.AccNo == id).SingleOrDefault();
+        if(customer.AccType == "Savings")
+        {
+            Console.WriteLine("You are currently logged into a Savings account and cannot request a checkbook.");
+        }
+        else if(requestCheck == null && customer.AccType == "Checking")
+        {
+            rq1.AccNo = id;
+            rq1.RqType = "Checkbook";
+            db.RequestToAdmins.Add(rq1);
+            db.SaveChanges();
+            Console.WriteLine("Checkbook Requested");
+        }
+        else
+        {
+            Console.WriteLine("You already have a pending checkbook request. Please wait for an admin to approve your previous request.");
+        }
     }
 
 
@@ -259,12 +271,27 @@ public class CustomerOperations
 
         CustomerUser customer = db.CustomerUsers.Find(id);
         RequestToAdmin rq1 = new RequestToAdmin();
-        rq1.AccNo = id;
-        rq1.RqType = "Password Change";
-        rq1.RqPassword = password;
-        db.RequestToAdmins.Add(rq1);
-        db.SaveChanges();
-        Console.WriteLine("Password Request Sent");
+        var requestCheck = db.RequestToAdmins.Where(a => a.RqComplete == Convert.ToBoolean("False") && a.RqType == "Password Change" && a.AccNo == customer.AccNo).SingleOrDefault();
+        if(requestCheck == null)
+        {
+            rq1.AccNo = id;
+            rq1.RqType = "Password Change";
+            rq1.RqPassword = password;
+            db.RequestToAdmins.Add(rq1);
+            db.SaveChanges();
+            Console.WriteLine("Password Request Sent");
+        }
+        else
+        {
+            string prevRq = requestCheck.RqPassword;
+            db.RequestToAdmins.Remove(requestCheck);
+            rq1.AccNo = id;
+            rq1.RqType = "Password Change";
+            rq1.RqPassword = password;
+            db.RequestToAdmins.Add(rq1);
+            db.SaveChanges();
+            Console.WriteLine($"Previous password request of {prevRq} has been removed and a new password request has been sent.");
+        }
     }
 
 }
