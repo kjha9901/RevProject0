@@ -17,7 +17,10 @@ try
     while(choice != "3")
     {
         Console.Clear();
-        Console.WriteLine("Welcome to THE BANK");
+        Console.Write("Welcome to ");
+        Console.ForegroundColor = ConsoleColor.Green;
+        Console.Write("THE BANK\n");
+        Console.ResetColor();
         Console.WriteLine("1. Customer");
         Console.WriteLine("2. Admin");
         Console.WriteLine("3. Exit");
@@ -201,7 +204,10 @@ try
 
             case "3":
             Console.Clear();
-            Console.WriteLine("Exited Bank");
+            Console.Write("Thank you for visiting ");
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write("THE BANK\n");
+            Console.ResetColor();
             break;
 
             default:

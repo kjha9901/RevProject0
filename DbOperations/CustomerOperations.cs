@@ -15,7 +15,7 @@ public class CustomerOperations
         Console.WriteLine("3. Deposit");
         Console.WriteLine("4. Transfer");
         Console.WriteLine("5. Last 5 transactions");
-        Console.WriteLine("6. Request Cheque Book");
+        Console.WriteLine("6. Request Checkbook");
         Console.WriteLine("7. Change Password");
         Console.WriteLine("8. Exit");
     }
@@ -53,6 +53,7 @@ public class CustomerOperations
         if(customerInfo != null)
         {
             Console.WriteLine("Account details: ");
+            Console.WriteLine("Account Number: "+customerInfo.AccNo);
             Console.WriteLine("Name: "+customerInfo.AccName);
             Console.WriteLine("Type of account: "+customerInfo.AccType);
             Console.WriteLine("Balance: "+customerInfo.AccBalance);
